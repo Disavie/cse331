@@ -35,4 +35,11 @@ def non_constructible_change(coins):
     cannot be created is 4. This is determined by analyzing combinations
     of the coins and identifying gaps in constructible sums.
     """
-    pass
+    coins.sort()
+    max = 0
+
+    for coin in coins:
+        if coin > max+1:
+            return max+1
+        max+=coin
+    return max+1
