@@ -12,7 +12,7 @@ import unittest
 # for more information on typehinting, check out https://docs.python.org/3/library/typing.html
 T = TypeVar("T")  # represents generic type
 
-
+#->>>>>> TO RUN A SPECIFIC TEST DO THIS: python3 -m unittest tests.DLLTests.[TEST_NAME]
 class DLLTests(unittest.TestCase):
 
     def check_dll(self, expected: List[T], dll: DLL, multilevel: bool = False):

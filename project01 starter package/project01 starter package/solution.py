@@ -110,6 +110,7 @@ class DLL:
 
         :return: True if DLL is empty, else False.
         """
+        return 1 if self.size == 0 else 0
         pass
 
     def push(self, val: T, back: bool = True) -> None:
@@ -120,7 +121,21 @@ class DLL:
         :param back: if True, add Node containing value to back (tail-end) of DLL; if False, add to front (head-end).
         :return: None.
         """
-        pass
+        newNode = Node(val)
+        if not self.empty():
+            if back:
+                self.tail.next = newNode
+                newNode.prev = self.tail
+                self.tail = newNode
+            else:
+                newNode.next = self.head
+                self.head.prev = newNode
+                self.head = newNode
+        else:
+            self.head = newNode
+            self.tail = newNode
+        self.size+=1
+
 
     def pop(self, back: bool = True) -> None:
         """
@@ -129,7 +144,16 @@ class DLL:
         :param back: if True, remove Node from (tail-end) of DLL; if False, remove from front (head-end).
         :return: None.
         """
-        pass
+        if not self.empty():
+            if self.head is self.tail:
+                self.head = self.tail = None
+            elif back:
+                self.tail = self.tail.prev
+                self.tail.next = None
+            else:
+                self.head = self.head.next
+                self.head.prev = None
+            self.size-=1
 
     def list_to_dll(self, source: List[T]) -> None:
         """
@@ -138,7 +162,11 @@ class DLL:
         :param source: standard Python list from which to construct DLL.
         :return: None.
         """
-        pass
+        self.head = None
+        self.tail = None
+        self.size = 0
+        for val in source:
+            self.push(val)
 
     def dll_to_list(self) -> List[T]:
         """
@@ -146,8 +174,13 @@ class DLL:
 
         :return: standard Python list containing values stored in DLL.
         """
-        pass
-
+        list = []
+        ptr = self.head
+        while ptr is not None:
+            list.append(ptr.value)
+            ptr = ptr.next
+        return list
+    
     def _find_nodes(self, val: T, find_first: bool = False) -> List[Node]:
         """
         Construct list of Nodes with value val in the DLL and return the associated Node list
@@ -157,7 +190,15 @@ class DLL:
         occurrences of val
         :return: A list of all the Nodes with value val.
         """
-        pass
+        found_nodes = []
+        ptr = self.head
+        while ptr is not None:
+            if ptr.value == val:
+                found_nodes.append(ptr)
+                if find_first:
+                    break
+            ptr = ptr.next
+        return found_nodes
 
     def find(self, val: T) -> Node:
         """
@@ -166,7 +207,11 @@ class DLL:
         :param val: value to be found in DLL.
         :return: first Node object in DLL containing `val`. If `val` does not exist in DLL, return None.
         """
-        pass
+        item = self._find_nodes(val,True)
+        if item:
+            return item[0]
+        return None
+
 
     def find_all(self, val: T) -> List[Node]:
         """
@@ -175,7 +220,8 @@ class DLL:
         :param val: value to be searched for in DLL.
         :return: Python list of all Node objects in DLL containing `val`. If `val` does not exist in DLL, return an empty list.
         """
-        pass
+        item = self._find_nodes(val,False)
+        return item
 
     def remove_node(self, to_remove: Node) -> None:
         """
