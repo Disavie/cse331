@@ -416,7 +416,6 @@ class DLLTests(unittest.TestCase):
         dll.push(0)
         result = dll.remove(0)
         self.assertTrue(result)
-        print(f"TEST {dll.head} {dll.tail}")
         self.check_dll([], dll)  # if failure here, see (2)
 
         # (3) remove non-existing value in single-node DLL

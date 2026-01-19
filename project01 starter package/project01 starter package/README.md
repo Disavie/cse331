@@ -1,0 +1,12 @@
+    * 01 - test\_empty: 7/7
+    * 02 - test\_push: 7/7
+    * 03 - test\_pop: 7/7
+    * 04 - test\_list\_to\_dll: 7/7
+    * 05 - test\_dll\_to\_list: 7/7
+    * 06 - test\_find: 9/9
+    * 07 - test\_find\_all: 9/9
+    * 08 - test\_remove: 9/9
+    * 09 - test\_remove\_all: 9/9
+    * 10 - test\_reverse: 9/9 
+    * 11 - test\_dream\_escaper: 20/20 
+    Total for project1: 100 points

@@ -303,4 +303,33 @@ def dream_escaper(dll: DLL) -> DLL:
     :param dll: The dll to turn into a single-level DLL.
     :return: The new DLL.
     """
-    pass
+
+    """
+    Input
+    A - B - C
+        |
+        D - F
+        |   |
+        E   H
+        |
+        G
+
+    Output 
+    A - B - D - E - G - F - H - C
+    """
+
+    new_dll = DLL()
+    node_ptr = dll.head
+
+    
+    def helper(node_ptr: Node):
+
+        while node_ptr:
+            new_dll.push(node_ptr.value)
+            if node_ptr.child:
+                helper(node_ptr.child)
+            node_ptr = node_ptr.next
+
+    helper(dll.head)
+
+    return new_dll
