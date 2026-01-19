@@ -12,7 +12,8 @@ import unittest
 # for more information on typehinting, check out https://docs.python.org/3/library/typing.html
 T = TypeVar("T")  # represents generic type
 
-#->>>>>> TO RUN A SPECIFIC TEST DO THIS: python3 -m unittest tests.DLLTests.[TEST_NAME]
+#->>>>>> TO RUN A SPECIFIC TEST DO THIS: 
+# python3 -m unittest tests.DLLTests.[TEST_NAME]
 class DLLTests(unittest.TestCase):
 
     def check_dll(self, expected: List[T], dll: DLL, multilevel: bool = False):
@@ -415,6 +416,7 @@ class DLLTests(unittest.TestCase):
         dll.push(0)
         result = dll.remove(0)
         self.assertTrue(result)
+        print(f"TEST {dll.head} {dll.tail}")
         self.check_dll([], dll)  # if failure here, see (2)
 
         # (3) remove non-existing value in single-node DLL

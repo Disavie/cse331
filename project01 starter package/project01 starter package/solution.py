@@ -230,7 +230,19 @@ class DLL:
         :param to_remove: node to be removed from the list
         :return: None
         """
-        pass
+        if to_remove is not self.tail:
+            to_remove.next.prev = to_remove.prev
+        else:
+            self.tail = to_remove.prev
+            if self.tail:
+                self.tail.next = None
+        if to_remove is not self.head:
+            to_remove.prev.next = to_remove.next
+        else:
+            self.head = to_remove.next
+            if self.head:
+                self.head.prev = None
+        self.size-=1
 
     def remove(self, val: T) -> bool:
         """
@@ -239,7 +251,15 @@ class DLL:
         :param val: value to be deleted from DLL.
         :return: True if Node containing `val` was deleted from DLL; else, False.
         """
-        pass
+
+        node_ptr = self.head
+        while node_ptr:
+            if node_ptr.value == val:
+                self.remove_node(node_ptr)
+                return True
+            node_ptr = node_ptr.next
+
+        return False
 
     def remove_all(self, val: T) -> int:
         """
@@ -248,7 +268,15 @@ class DLL:
         :param val: value to be deleted from DLL.
         :return: integer indicating the number of Nodes containing `val` deleted from DLL; if no Node containing `val` exists in DLL, return 0.
         """
-        pass
+        c=0
+        node_ptr = self.head
+        while node_ptr:
+            if node_ptr.value == val:
+                self.remove_node(node_ptr)
+                c+=1
+            node_ptr = node_ptr.next
+
+        return c
 
     def reverse(self) -> None:
         """
@@ -256,7 +284,16 @@ class DLL:
 
         :return: None.
         """
-        pass
+        c = self.head
+        while c:
+            temp = c.next
+            c.next = c.prev
+            c.prev = temp
+            c = c.prev
+        temp = self.head
+        self.head = self.tail
+        self.tail = temp
+
 
 
 def dream_escaper(dll: DLL) -> DLL:
