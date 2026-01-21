@@ -16,8 +16,32 @@ def find_unsorted_subarray(array):
         out-of-order elements and determine the boundaries of the subarray
         that must be sorted.
     """
+    #edge case empty array
+    if not len(array):
+        return [-1,-1]
+    indicies = [-1,-1]
 
-    pass
+    #find max value
+    curmax = array[0]
+    i = 1
+    while i < len(array):
+        if curmax > array[i]:
+            indicies[1]  = i
+        else:
+            curmax = array[i]
+        i+=1
+    
+    #find min
+    curmin = array[-1] #< back of array
+    i = len(array)-1
+    while i > -1:
+        if array[i] > curmin:
+            indicies[0] = i
+        else:
+            curmin = array[i]
+        i-=1
+    return indicies
+
 
 
 def is_out_of_order(i, num, array):
