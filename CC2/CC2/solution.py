@@ -40,6 +40,9 @@ def find_unsorted_subarray(array):
         else:
             curmin = array[i]
         i-=1
+
+        #O(n) + O(n) = O(2n) = O(n) time complexity
+        #O(1) space
     return indicies
 
 
