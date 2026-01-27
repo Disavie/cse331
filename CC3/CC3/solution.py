@@ -167,7 +167,9 @@ class LRUCache:
         Returns:
         - The most recently used key.
         """
-        pass
+        h = self.list_of_most_recent.head
+        return h.key
+        
 
     # HELPER FUNCTIONS ....
     def evict_least_recent(self):
