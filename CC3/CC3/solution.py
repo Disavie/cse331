@@ -106,6 +106,7 @@ class LRUCache:
     - list_of_most_recent: A doubly linked list to track the order of the key-value pairs.
     """
 
+
     def __init__(self, max_size):
         """
         Initializes an LRUCache with a given maximum size.
@@ -114,7 +115,10 @@ class LRUCache:
         - max_size: The maximum number of items that can be stored in the cache.
         -and more :)
         """
-        pass
+        self.max_size = max_size
+        self.cache = {}
+        self.current_size = 0
+        self.list_of_most_recent = DoublyLinkedList()
 
     def insert_key_value_pair(self, key, value):
         """
@@ -125,7 +129,20 @@ class LRUCache:
         - key: The key of the item to be inserted.
         - value: The value associated with the key.
         """
-        pass
+        if key in self.cache:
+            node = self.cache[key]
+            node.value = value
+            self.update_most_recent(node)
+            return
+    
+        new = DoublyLinkedListNode(key,value)
+        if self.current_size == self.max_size:
+            self.evict_least_recent()
+            self.current_size-=1
+
+        self.list_of_most_recent.add_node_to_head(new)
+        self.cache[key] = new
+        self.current_size+=1
 
     def get_value_from_key(self, key):
         """
@@ -137,7 +154,11 @@ class LRUCache:
         Returns:
         - The value associated with the key, or None if the key is not found.
         """
-        pass
+        if key not in self.cache:
+            return None
+        look = self.cache.get(key)
+        self.update_most_recent(look)
+        return look.value
 
     def get_most_recent_key(self):
         """
