@@ -23,7 +23,9 @@ def do_comparison(first: T, second: T, comparator: Callable[[T, T], bool], desce
     :param descending: Determines whether comparison result should be flipped
     :return: True if first should come before second in a sorted list
     """
-    pass
+    result = comparator(first,second)
+    return not result if descending else result
+
 
 
 def selection_sort(data: List[T], *, comparator: Callable[[T, T], bool] = lambda x, y: x < y,
@@ -36,7 +38,23 @@ def selection_sort(data: List[T], *, comparator: Callable[[T, T], bool] = lambda
      treated as less than or equal to the second argument.
     :param descending: Perform the sort in descending order when this is True
     """
-    pass
+    #data[:i] is the sorted portion
+    #data[j:len(data)] is the unsorted portion
+    n = len(data)
+    for i in range(n):
+        swap_index = i
+        for j in range(i+1,n):
+
+            if not descending:
+                if comparator(data[j],data[swap_index]):
+                    swap_index = j
+            else:
+                if comparator(data[swap_index],data[j]):
+                    swap_index = j     
+
+    
+        data[i], data[swap_index] = data[swap_index], data[i]
+
 
 
 def bubble_sort(data: List[T], *, comparator: Callable[[T, T], bool] = lambda x, y: x < y,
@@ -49,7 +67,22 @@ def bubble_sort(data: List[T], *, comparator: Callable[[T, T], bool] = lambda x,
      treated as less than or equal to the second argument.
     :param descending: Perform the sort in descending order when this is True
     """
-    pass
+
+    while(True):
+        swaps = 0
+        for i in range(len(data)-1):
+            j = i+1
+            if not descending:
+                if comparator(data[j],data[i]):
+                    data[i],data[j] = data[j], data[i]
+                    swaps+=1
+            else:
+                if comparator(data[i],data[j]):
+                    data[i],data[j] = data[j], data[i]
+                    swaps+=1
+        if not swaps:
+            break
+ 
 
 
 def insertion_sort(data: List[T], *, comparator: Callable[[T, T], bool] = lambda x, y: x < y,
@@ -62,7 +95,26 @@ def insertion_sort(data: List[T], *, comparator: Callable[[T, T], bool] = lambda
      treated as less than or equal to the second argument.
     :param descending: Perform the sort in descending order when this is True
     """
-    pass
+    n = len(data)
+    for i in range(1, n):
+        key = data[i]
+        j = i - 1
+
+        while j >= 0:
+            if descending:
+                if comparator(data[j], key):
+                    data[j + 1] = data[j]
+                    j -= 1
+                else:
+                    break
+            else:
+                if comparator(key, data[j]):
+                    data[j + 1] = data[j]
+                    j -= 1
+                else:
+                    break
+
+        data[j + 1] = key
 
 
 def hybrid_merge_sort(data: List[T], *, threshold: int = 12,

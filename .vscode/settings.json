@@ -2,7 +2,7 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
-        "./CC3/CC3",
+        "./Project02 Starter Package/Project02 Starter Package",
         "-p",
         "tests.py"
     ],
