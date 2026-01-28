@@ -137,7 +137,7 @@ class LRUCache:
     
         new = DoublyLinkedListNode(key,value)
         if self.current_size == self.max_size:
-            self.evict_least_recent()
+            self.evict_least_recent()   #Removes from the dictionary self.cache and from DLL 
             self.current_size-=1
 
         self.list_of_most_recent.add_node_to_head(new)

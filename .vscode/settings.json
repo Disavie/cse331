@@ -2,7 +2,7 @@
     "python.testing.unittestArgs": [
         "-v",
         "-s",
-        ".",
+        "./CC3/CC3",
         "-p",
         "tests.py"
     ],
