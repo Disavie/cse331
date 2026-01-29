@@ -28,23 +28,23 @@ test_insertion_sort_descending: 4/4
 
 test_insertion_sort_comprehensive: 3/3
 
-Hybrid Merge: __/25
+Hybrid Merge: 25/25
 
-test_hybrid_merge_sort_basic: __/5
+test_hybrid_merge_sort_basic: 5/5
 
-test_hybrid_merge_sort_threshold: __/5
+test_hybrid_merge_sort_threshold: 5/5
 
-test_hybrid_merge_sort_comparator: __/5
+test_hybrid_merge_sort_comparator: 5/5
 
-test_hybrid_merge_sort_descending: __/5
+test_hybrid_merge_sort_descending: 5/5
 
-test_hybrid_merge_sort_comprehensive: __/5
+test_hybrid_merge_sort_comprehensive: 5/5
 
-test_hybrid_merge_sort_speed: __/0
+test_hybrid_merge_sort_speed: 0/0
 
 This test helps checking if your hybrid merge sort is implemented properly to make sure your code time complexity is correct
 
-test_hybrid_merge_actually_hybrid: __/0
+test_hybrid_merge_actually_hybrid: 0/0
 
 This test is similar to test_hybrid_merge_sort_speed, but it checks if your hybrid merge sort function is a true hybrid merge sort or not.
 

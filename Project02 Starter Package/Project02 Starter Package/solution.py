@@ -24,6 +24,7 @@ def do_comparison(first: T, second: T, comparator: Callable[[T, T], bool], desce
     :return: True if first should come before second in a sorted list
     """
     result = comparator(first,second)
+    #if first < second and descending = True 3,2,1
     return not result if descending else result
 
 
@@ -117,6 +118,23 @@ def insertion_sort(data: List[T], *, comparator: Callable[[T, T], bool] = lambda
         data[j + 1] = key
 
 
+def merge(l1: List[T], l2: List[T], comparator, descending) -> List[T]:
+    i = j = 0
+    result = []
+
+    while i < len(l1) and j < len(l2):
+        if do_comparison(l1[i], l2[j], comparator, descending):
+            result.append(l1[i])
+            i += 1
+        else:
+            result.append(l2[j])
+            j += 1
+
+    result.extend(l1[i:])
+    result.extend(l2[j:])
+    return result
+
+
 def hybrid_merge_sort(data: List[T], *, threshold: int = 12,
                       comparator: Callable[[T, T], bool] = lambda x, y: x < y, descending: bool = False) -> None:
     """
@@ -130,7 +148,21 @@ def hybrid_merge_sort(data: List[T], *, threshold: int = 12,
      treated as less than or equal to the second argument.
     :param descending: Perform the sort in descending order when this is True
     """
-    pass
+    
+    if len(data) <= 1:
+        return data
+
+    #hybrid part
+    if len(data) <= threshold:
+        return insertion_sort(data, comparator = comparator, descending = descending)
+    
+    mid =   len(data)//2
+    l1 = data[:mid]
+    l2 = data[mid:]
+    hybrid_merge_sort(l1,threshold=threshold,comparator=comparator,descending=descending)
+    hybrid_merge_sort(l2,threshold=threshold,comparator=comparator,descending=descending)
+
+    data[:] = merge(l1,l2,comparator,descending)
 
 
 ####################################################################
