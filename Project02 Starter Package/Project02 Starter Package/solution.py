@@ -298,18 +298,42 @@ def recommend_products(products: List[Product], sorted_by: str) -> List[Product]
     if not products:
         return []
 
-    if sorted_by == "rating":
-        # rating descending, price ascending as tie-breaker
-        products.sort(key=lambda p: (-p.rating, p.price))
-    elif sorted_by == "price_low_to_high":
-        # price ascending, rating descending as tie-breaker
-        products.sort(key=lambda p: (p.price, -p.rating))
-    elif sorted_by == "price_high_to_low":
-        # price descending, rating descending as tie-breaker
-        products.sort(key=lambda p: (-p.price, -p.rating))
-    else:  # fallback
-        products.sort(key=lambda p: (-p.rating, p.price))
+    # sort by relevance first in descending order
+    THRESHOLD = 12
+    hybrid_merge_sort(products,
+                      threshold=THRESHOLD,
+                      comparator=lambda x,y : x.relevance < y.relevance,
+                      descending=True)
 
-    # Top 30%
     sz = max(1, round(len(products) * 0.3))
-    return products[:sz]
+    selected = products[:sz]
+
+    if sorted_by == "price_low_to_high":
+        # price ascending, rating descending
+        hybrid_merge_sort(
+            selected,
+            threshold=THRESHOLD,
+            comparator=lambda x, y: (x.price, -x.rating) < (y.price, -y.rating)
+        )
+    elif sorted_by == "price_high_to_low":
+        # price descending, rating descending
+        hybrid_merge_sort(
+            selected,
+            threshold=THRESHOLD,
+            comparator=lambda x, y: (-x.price, -x.rating) < (-y.price, -y.rating)
+        )
+    elif sorted_by == "rating":
+        # rating descending, price ascending
+        hybrid_merge_sort(
+            selected,
+            threshold=THRESHOLD,
+            comparator=lambda x, y: (-x.rating, x.price) < (-y.rating, y.price)
+        )
+    else:
+        hybrid_merge_sort(
+            selected,
+            threshold=THRESHOLD,
+            comparator=lambda x, y: (-x.rating, x.price) < (-y.rating, y.price)
+        )
+
+    return selected
