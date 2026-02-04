@@ -50,6 +50,7 @@ This test is similar to test_hybrid_merge_sort_speed, but it checks if your hybr
 
 NOTE: one way to fail this test is if hybrid_merge_sort doesn't call itself recursively (e.g. if you have a separate merge_sort helper function). In this case, you must take extra care and ensure that your overall algorithm is actually hybrid to avoid losing points.
 
-Application Problem: __/30
+Application Problem: 30/30
 
-test_get_relevant_songs: __/30
+test_get_relevant_songs: 30/30
+There is no test case called "test_get_relevant_songs" I think this is meant to say "test_recommened_products"?
