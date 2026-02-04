@@ -295,4 +295,21 @@ def recommend_products(products: List[Product], sorted_by: str) -> List[Product]
     sort by rating in descending order. If two products share the same price and rating, their order doesn't matter.
     :return: List[Product]. Sorted list of products that are relevant to the user's search keywords.
     """
-    pass
+    if not products:
+        return []
+
+    if sorted_by == "rating":
+        # rating descending, price ascending as tie-breaker
+        products.sort(key=lambda p: (-p.rating, p.price))
+    elif sorted_by == "price_low_to_high":
+        # price ascending, rating descending as tie-breaker
+        products.sort(key=lambda p: (p.price, -p.rating))
+    elif sorted_by == "price_high_to_low":
+        # price descending, rating descending as tie-breaker
+        products.sort(key=lambda p: (-p.price, -p.rating))
+    else:  # fallback
+        products.sort(key=lambda p: (-p.rating, p.price))
+
+    # Top 30%
+    sz = max(1, round(len(products) * 0.3))
+    return products[:sz]
