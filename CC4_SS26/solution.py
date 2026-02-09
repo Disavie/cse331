@@ -28,4 +28,21 @@ def sort_inventory(inventory, priority):
     >>> sort_inventory(inventory, priority)
     [0, 0, 0, 2, 2, 2, 3, 3]
     """
-    pass  # TODO: Implement this function
+
+
+    low = mid = 0
+    high = len(inventory) - 1
+
+    while mid <= high:
+        if inventory[mid] == priority[0]:
+            inventory[low], inventory[mid] = inventory[mid], inventory[low]
+            low += 1
+            mid += 1
+        elif inventory[mid] == priority[1]:
+            mid += 1
+        else:  # inventory[mid] == priority[2]
+            inventory[mid], inventory[high] = inventory[high], inventory[mid]
+            high -= 1
+
+    return inventory
+
