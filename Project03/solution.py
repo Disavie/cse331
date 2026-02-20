@@ -191,6 +191,7 @@ class HashTable:
 
         :return: size
         """
+        return self.size
         pass
 
     def __setitem__(self, key: str, value: T) -> None:
@@ -201,6 +202,7 @@ class HashTable:
         :param value: value to insert
         :return: None
         """
+        self._insert(key,value)
         pass
 
     def __getitem__(self, key: str) -> T:
@@ -210,6 +212,10 @@ class HashTable:
         :param key: string key of item to retrieve from table
         :return: value associated with the item
         """
+        node = self._get(key)
+        if node is None:
+            raise KeyError
+        return node.value
         pass
 
     def __delitem__(self, key: str) -> None:
@@ -229,16 +235,36 @@ class HashTable:
         :return: Bool
         """
         pass
-
+    
     def _hash(self, key: str, inserting: bool = False) -> int:
-        """
-        Hash Method
+        base = self._hash_1(key)
+        step = self._hash_2(key)
 
-        :param key: key to hash
-        :param inserting: bool, are we inserting or not, defaults to False
-        :return: hashed bin for table
-        """
-        pass
+        first_deleted = None  # track first deleted slot for insert
+
+        for i in range(self.capacity):
+            index = (base + i * step) % self.capacity
+            node = self.table[index]
+
+            # Case 1: Empty slot
+            if node is None:
+                if inserting:
+                    # if we saw a deleted slot earlier, use that
+                    return first_deleted if first_deleted is not None else index
+                else:
+                    return index  # search stops, not found
+
+            # Case 2: Deleted slot
+            if node.deleted:
+                if inserting and first_deleted is None:
+                    first_deleted = index
+                continue
+
+            # Case 3: Active key
+            if node.key == key:
+                return index
+
+        return -1  # table full or not found  
 
     def _insert(self, key: str, value: T) -> None:
         """
