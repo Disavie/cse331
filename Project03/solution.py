@@ -368,10 +368,9 @@ class HashTable:
         :return: None
 
         """
-        for n in self.table():
-            if n is not None and not n.deleted:
-                del n
-
+        for i in range(self.capacity):
+            self.table[i] = None
+        self.size = 0
 
 def display_duplicates(data: List[List[str]], filenames: List[str]) -> HashTable:
     """
