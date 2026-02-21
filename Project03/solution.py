@@ -293,7 +293,15 @@ class HashTable:
         :param key: the key we are deleting from the hash table
         :return: None
         """
-        pass
+        ind = self._hash(key)
+
+        pot_node = self.table[ind]
+        if pot_node == None:
+            return None
+        pot_node.key = None
+        pot_node.value = None
+        pot_node.deleted = True
+        self.size -=1
 
     def _grow(self) -> None:
         """
@@ -358,8 +366,11 @@ class HashTable:
         Clears the hash table
 
         :return: None
+
         """
-        pass
+        for n in self.table():
+            if n is not None and not n.deleted:
+                del n
 
 
 def display_duplicates(data: List[List[str]], filenames: List[str]) -> HashTable:
