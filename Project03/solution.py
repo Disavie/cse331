@@ -240,31 +240,18 @@ class HashTable:
         base = self._hash_1(key)
         step = self._hash_2(key)
 
-        first_deleted = None  # track first deleted slot for insert
+        index = base
 
         for i in range(self.capacity):
-            index = (base + i * step) % self.capacity
+
             node = self.table[index]
 
-            # Case 1: Empty slot
-            if node is None:
-                if inserting:
-                    # if we saw a deleted slot earlier, use that
-                    return first_deleted if first_deleted is not None else index
-                else:
-                    return index  # search stops, not found
-
-            # Case 2: Deleted slot
-            if node.deleted:
-                if inserting and first_deleted is None:
-                    first_deleted = index
-                continue
-
-            # Case 3: Active key
-            if node.key == key:
+            if node == None or (node.deleted and inserting) or node.key == key:
                 return index
 
-        return -1  # table full or not found  
+            index = (index + step) % self.capacity
+        # nowhere to put in the table
+        return -1
 
     def _insert(self, key: str, value: T) -> None:
         """
