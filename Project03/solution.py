@@ -261,7 +261,20 @@ class HashTable:
         :param value: int to be used as value mapped to key
         :return: None
         """
-        pass
+
+        loc = self._hash(key, inserting = True)
+        node = HashNode(key,value)
+        cur_occupant = self.table[loc]
+        if cur_occupant is not None and cur_occupant.key == key:
+            cur_occupant.value = value
+        else:
+            self.table[loc] = node
+            self.size+=1
+
+        #check if adding a new node will require a resize to keep load factor <= 0.5
+        if self.size / self.capacity >= 0.5:
+            self._grow()
+
 
     def _get(self, key: str) -> Optional[HashNode]:
         """
@@ -270,7 +283,8 @@ class HashTable:
         :param key: key of hash node to find in hash table
         :return item: value in table if key exists, else None
         """
-        pass
+        node = self.table[self._hash(key)]
+        return node
 
     def _delete(self, key: str) -> None:
         """
@@ -287,7 +301,23 @@ class HashTable:
 
         :return: None
         """
-        pass
+        self.size = 0
+        self.capacity*=2
+        new_table: List[Optional[HashNode]] = [None] * self.capacity
+        old_table = self.table
+        self.table = new_table 
+
+        for n in old_table:
+            # skip rehashing if n = None or n is deleted
+            if n == None:
+                continue
+            if not n.deleted:
+                self._insert(key = n.key, value = n.value)
+
+
+        while self.capacity > self.primes[self.prime_index]:
+            self.prime_index+=1
+
 
     def update(self, pairs: List[Tuple[str, T]] = []) -> None:
         """
