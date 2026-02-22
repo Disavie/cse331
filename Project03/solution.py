@@ -216,7 +216,6 @@ class HashTable:
         if node is None:
             raise KeyError
         return node.value
-        pass
 
     def __delitem__(self, key: str) -> None:
         """
@@ -225,7 +224,7 @@ class HashTable:
         :param key: the key of the item to remove from the table
         :return: None
         """
-        pass
+        self._delete(key)
 
     def __contains__(self, key: str) -> bool:
         """
@@ -234,7 +233,8 @@ class HashTable:
         :param key: string key of item to retrieve
         :return: Bool
         """
-        pass
+
+        return self._get(key) is not None
     
     def _hash(self, key: str, inserting: bool = False) -> int:
         base = self._hash_1(key)
@@ -265,7 +265,7 @@ class HashTable:
         # Table full — use deleted if available
         if inserting and idx_first_deleted != -1:
             return idx_first_deleted
-        raise KeyError
+        return -1
 
     def _insert(self, key: str, value: T) -> None:
         """
@@ -314,14 +314,14 @@ class HashTable:
         :param key: the key we are deleting from the hash table
         :return: None
         """
-        ind = self._hash(key)
+        node = self._get(key)
+        if node == None:
+            raise KeyError 
 
-        pot_node = self.table[ind]
-        if pot_node == None:
-            return None
-        pot_node.key = None
-        pot_node.value = None
-        pot_node.deleted = True
+         
+        node.key = None
+        node.value = None
+        node.deleted = True
         self.size -=1
 
     def _grow(self) -> None:
@@ -339,8 +339,6 @@ class HashTable:
             self.prime_index+=1
         self.prime_index-=1
 
-        print(HashTable.primes[self.prime_index])
-        print(self.capacity)
 
         for n in old_table:
             # skip rehashing if n = None or n is deleted
@@ -356,7 +354,8 @@ class HashTable:
         :param pairs: an iterable of key/value pairs
         :return: None
         """
-        pass
+        for key, value in pairs:
+            self._insert(key,value)
 
     def keys(self) -> List[str]:
         """
@@ -364,7 +363,11 @@ class HashTable:
 
         :return: list of keys
         """
-        pass
+        l = []
+        for n in self.table:
+            if n is not None and not n.deleted:
+                l.append(n.key)
+        return l
 
     def values(self) -> List[T]:
         """
@@ -372,7 +375,11 @@ class HashTable:
 
         :return: list of values
         """
-        pass
+        l = []
+        for n in self.table:
+            if n is not None and not n.deleted:
+                l.append(n.value)
+        return l
 
     def items(self) -> List[Tuple[str, T]]:
         """
@@ -380,7 +387,11 @@ class HashTable:
 
         :return: list of items
         """
-        pass
+        l = []
+        for n in self.table:
+            if n is not None and not n.deleted:
+                l.append((n.key,n.value))
+        return l
 
     def clear(self) -> None:
         """
