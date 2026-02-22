@@ -202,7 +202,7 @@ class HashTable:
         :param value: value to insert
         :return: None
         """
-        self._insert(key,value)
+        self._insert(key= key ,value = value)
         pass
 
     def __getitem__(self, key: str) -> T:
@@ -241,17 +241,31 @@ class HashTable:
         step = self._hash_2(key)
 
         index = base
+        idx_first_deleted = -1
 
-        for i in range(self.capacity):
-
+        for _ in range(self.capacity):
             node = self.table[index]
 
-            if node == None or (node.deleted and inserting) or node.key == key:
+            # Found empty slot
+            if node is None:
+                if inserting and idx_first_deleted != -1:
+                    return idx_first_deleted
                 return index
 
+            # Found matching key
+            if not node.deleted and node.key == key:
+                return index
+
+            # Remember first deleted slot (only if inserting)
+            if inserting and node.deleted and idx_first_deleted == -1:
+                idx_first_deleted = index
+
             index = (index + step) % self.capacity
-        # nowhere to put in the table
-        return -1
+
+        # Table full — use deleted if available
+        if inserting and idx_first_deleted != -1:
+            return idx_first_deleted
+        raise KeyError
 
     def _insert(self, key: str, value: T) -> None:
         """
@@ -261,19 +275,21 @@ class HashTable:
         :param value: int to be used as value mapped to key
         :return: None
         """
-
-        loc = self._hash(key, inserting = True)
-        node = HashNode(key,value)
-        cur_occupant = self.table[loc]
-        if cur_occupant is not None and cur_occupant.key == key:
-            cur_occupant.value = value
-        else:
-            self.table[loc] = node
-            self.size+=1
-
         #check if adding a new node will require a resize to keep load factor <= 0.5
-        if self.size / self.capacity >= 0.5:
+        
+        loc = self._hash(key, inserting = True)
+        current = self.table[loc]
+        if current is not None and current.key == key:
+            current.value = value
+            return
+
+        if (self.size + 1) / self.capacity >= 0.5:
             self._grow()
+            loc = self._hash(key, inserting = True)
+        self.table[loc] = HashNode(key,value) 
+        self.size+=1
+
+
 
 
     def _get(self, key: str) -> Optional[HashNode]:
@@ -283,9 +299,14 @@ class HashTable:
         :param key: key of hash node to find in hash table
         :return item: value in table if key exists, else None
         """
-        node = self.table[self._hash(key)]
-        return node
+        index = self._hash(key)
+        node = self.table[index]
 
+        if node is None or node.deleted:
+            return None
+        if node.key != key:
+            return None
+        return node
     def _delete(self, key: str) -> None:
         """
         Delete a key from the dictionary
@@ -314,17 +335,17 @@ class HashTable:
         new_table: List[Optional[HashNode]] = [None] * self.capacity
         old_table = self.table
         self.table = new_table 
+        while HashTable.primes[self.prime_index] < self.capacity:
+            self.prime_index+=1
+        self.prime_index-=1
+
+        print(HashTable.primes[self.prime_index])
+        print(self.capacity)
 
         for n in old_table:
             # skip rehashing if n = None or n is deleted
-            if n == None:
-                continue
-            if not n.deleted:
+            if n is not None and not n.deleted:
                 self._insert(key = n.key, value = n.value)
-
-
-        while self.capacity > self.primes[self.prime_index]:
-            self.prime_index+=1
 
 
     def update(self, pairs: List[Tuple[str, T]] = []) -> None:
