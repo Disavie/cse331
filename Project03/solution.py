@@ -446,6 +446,7 @@ def display_duplicates(data: List[List[str]], filenames: List[str]) -> HashTable
         found_dupe = False
         a,b,c,d = data[i]
         filename  = filenames[i] 
+        #adds 16 additional checks per loop but this is just O(1) work so its fine
         for key in [a,b,c,d]:
             for table in [w,x,y,z,]:
                 if key in table:
@@ -473,4 +474,50 @@ def generate_fan_chant(fan_chant: str, chant_words: List[str]) -> List[int]:
     :param chant_words: A list of strings that represents the words we want to find in the fan chant
     :return: A list of ints that contains the starting index of any permutation of the words within the fan chant
     """
-    pass
+    if not fan_chant or not chant_words:
+         return []
+
+    word_len = len(chant_words[0])
+    num_words = len(chant_words)
+    total_len = word_len * num_words
+    n = len(fan_chant)
+
+    if n < total_len:
+        return []
+
+    # Build frequency map using your HashTable
+    word_count = HashTable()
+    for word in chant_words:
+        if word in word_count:
+            word_count[word] = word_count[word] + 1
+        else:
+            word_count[word] = 1
+
+    result = []
+
+    # Slide window
+    for i in range(n - total_len + 1):
+        seen = HashTable()
+        j = 0
+
+        while j < num_words:
+            start = i + j * word_len
+            word = fan_chant[start:start + word_len]
+
+            if word not in word_count:
+                break
+
+            if word in seen:
+                seen[word] = seen[word] + 1
+            else:
+                seen[word] = 1
+
+            if seen[word] > word_count[word]:
+                break
+
+            j += 1
+
+        if j == num_words:
+            result.append(i)
+
+    return result  
