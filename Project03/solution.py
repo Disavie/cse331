@@ -405,6 +405,7 @@ class HashTable:
         self.size = 0
 
 def display_duplicates(data: List[List[str]], filenames: List[str]) -> HashTable:
+
     """
     Displays duplicate images represented by a HashTable in the following format ( {key : value} ):
     {first unique instance of image filename : [List of duplicate image filenames of that first instance]}
@@ -421,8 +422,47 @@ def display_duplicates(data: List[List[str]], filenames: List[str]) -> HashTable
     The first filename corresponds the first list in data, the second to the second, etc.
     :returns: HashTable detailing image duplicate information as described above
     """
-    pass
 
+    #data is [w,x,y,z] unique hashes per coresponding filename in filesnames
+    #return hashtable of filenames (original, [duplicate,duplicate2,..])
+
+    #make 5 hash tables - 1 per w x y z and 1 to return
+    
+    #as you add to the hash tables, check if w x y z are in any of the hash tables already, if all 4 are => we have a duplicate, add that first one to the 
+    #5th table
+
+    w = HashTable()
+    x = HashTable()
+    y = HashTable()
+    z = HashTable()
+
+    ret = HashTable()
+    i = 0
+#    print(len(filenames))
+#    print(len(data))
+#    exit()
+    for i in range(len(data)):
+        
+        found_dupe = False
+        a,b,c,d = data[i]
+        filename  = filenames[i] 
+        for key in [a,b,c,d]:
+            for table in [w,x,y,z,]:
+                if key in table:
+                    ret[table[key]].append(filename)
+                    found_dupe = True
+                    break
+            if found_dupe:
+                break
+        if not found_dupe:
+            w[a] = filename
+            x[b] = filename
+            y[c] = filename
+            z[d] = filename
+            
+            ret[filename] = [] 
+    print(ret)
+    return ret
 
 def generate_fan_chant(fan_chant: str, chant_words: List[str]) -> List[int]:
     """
