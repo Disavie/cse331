@@ -485,7 +485,6 @@ def generate_fan_chant(fan_chant: str, chant_words: List[str]) -> List[int]:
     if n < total_len:
         return []
 
-    # Build frequency map using your HashTable
     word_count = HashTable()
     for word in chant_words:
         if word in word_count:
@@ -495,7 +494,6 @@ def generate_fan_chant(fan_chant: str, chant_words: List[str]) -> List[int]:
 
     result = []
 
-    # Slide window
     for i in range(n - total_len + 1):
         seen = HashTable()
         j = 0
