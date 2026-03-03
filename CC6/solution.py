@@ -1,4 +1,3 @@
-
 def next_greater_element(nums: list[int]) -> list[int]:
     """
     Compute the next greater element for each position in a circular array.
@@ -26,5 +25,30 @@ def next_greater_element(nums: list[int]) -> list[int]:
     #   element has not been found.
     # - You may need to loop through the array twice to simulate circular behavior.
 
+    stack = []
+    res = [-1] * len(nums)
+
+    for j in range(2*len(nums)):
+        i = j % len(nums)
+        while stack and nums[stack[-1]] < nums[i]:
+            index  = stack.pop()
+            res[index] = nums[i]
+        if j < len(nums):
+            stack.append(i)
+
+    return res
+
     # Placeholder so the function runs
-    return [-1] * len(nums)
+    """
+    0(N^2) solution
+    res = [-1] * len(nums)
+
+    for i in range(len(nums)):
+        j = (i + 1) % len(nums)
+        while j != i:
+            if nums[j] > nums[i]:
+                res[i] = nums[j]
+                break
+            j = (j + 1) % len(nums)
+    return res
+   """
