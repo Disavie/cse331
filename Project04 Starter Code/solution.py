@@ -77,7 +77,7 @@ class CircularDeque:
 
         :return: Amount of elements in the queue
         """
-        pass
+        return self.size
 
     def is_empty(self) -> bool:
         """
@@ -85,7 +85,7 @@ class CircularDeque:
 
         :return: Boolean if queue is empty
         """
-        pass
+        return self.size == 0
 
     def front_element(self) -> T:
         """
@@ -94,6 +94,8 @@ class CircularDeque:
         :return: Value in the front of the queue
         """
         pass
+        if self.size == 0: return None
+        return self.queue[self.front]
 
     def back_element(self) -> T:
         """
@@ -101,7 +103,8 @@ class CircularDeque:
 
         :return: Value in the back of the queue
         """
-        pass
+        if self.size == 0: return None
+        return self.queue[self.back]
 
     def enqueue(self, value: T, front: bool = True) -> None:
         """
@@ -110,7 +113,26 @@ class CircularDeque:
         :param value: The value to add.
         :param front: If True, insert at the front; otherwise, insert at the back.
         """
-        pass
+
+        if self.size+1 > self.capacity:
+            self.grow()
+
+        if front:
+            if self.is_empty():
+                self.front = 0
+                self.back = 0
+            else:
+                self.front = (self.front-1) % self.capacity
+
+            self.queue[self.front] = value
+        else:
+            if self.is_empty():
+                self.front = 0
+                self.back = 0
+            else:
+                self.back = (self.back+1) % self.capacity
+            self.queue[self.back] = value
+        self.size+=1
 
 
     def dequeue(self, front: bool = True) -> T:
@@ -120,20 +142,53 @@ class CircularDeque:
         :param front: Bool, true if should remove from front, False if should remove from back
         :return: removed item, None if empty
         """
-        pass
+
+        item = None 
+        if self.is_empty():
+            return item
+
+        if front:
+            item = self.queue[self.front]
+            self.front = (self.front+1) % self.capacity
+        else:
+            item = self.queue[self.back]
+            self.back = (self.back-1) % self.capacity
+
+        self.size-=1
+
+        if self.size <= self.capacity // 4 and self.capacity // 2 >= 4:
+            self.shrink()
+
+
+
+        return item
 
 
     def grow(self) -> None:
         """
         Grows the queue
         """
-        pass
+        old_cap = self.capacity
+        self.capacity*=2
+        new_queue = [None] * self.capacity
+        for i in range(self.size):
+                new_queue[i] = self.queue[(self.front+i) % old_cap]
+        self.back = self.size-1
+        self.front = 0
+        self.queue = new_queue
 
     def shrink(self) -> None:
         """
         Shrinks the queue
         """
-        pass
+        old_cap = self.capacity
+        self.capacity = self.capacity//2
+        new_queue = [None] * self.capacity
+        for i in range(self.size):
+                new_queue[i] = self.queue[(self.front+i) % old_cap]
+        self.back = self.size-1
+        self.front = 0
+        self.queue = new_queue
 
 
 def find_max_wind_speeds(numbers: List[int], size: int) -> List[int]:
