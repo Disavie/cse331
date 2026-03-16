@@ -201,7 +201,24 @@ def find_max_wind_speeds(numbers: List[int], size: int) -> List[int]:
     :param size: Size of sliding window
     :return: List with maximum element of window in each iteration
     """
-    pass
+    if not numbers:
+        return []
+    result = []
+    dq = CircularDeque()  # store indices
+
+    for i in range(len(numbers)):
+
+        while not dq.is_empty() and dq.front_element() <= i - size:
+            dq.dequeue()
+
+        while not dq.is_empty() and numbers[dq.back_element()] < numbers[i]:
+            dq.dequeue(False)
+
+        dq.enqueue(i, front=False)
+
+        if i >= size - 1:
+            result.append(numbers[dq.front_element()])
+    return result
 
 
 def max_wind_variability_score(wind_speeds: List[int]) -> int:
@@ -211,4 +228,17 @@ def max_wind_variability_score(wind_speeds: List[int]) -> int:
     :param wind_speeds: List of numbers to add
     :return: Int, max sum of non-adjacent elements
     """
-    pass
+    if not wind_speeds:
+        return 0
+    if len(wind_speeds) == 1:
+        return wind_speeds[0]
+
+    dp = [0] * len(wind_speeds)
+
+    dp[0] = wind_speeds[0]
+    dp[1] = max(wind_speeds[0], wind_speeds[1])
+
+    for i in range(2, len(wind_speeds)):
+        dp[i] = max(dp[i-1], dp[i-2] + wind_speeds[i])
+
+    return dp[-1]

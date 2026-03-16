@@ -1,5 +1,5 @@
 Auto Graded Tests (100 points)
-70/100
+100/100
     01 - test_len: 2/2
     02 - test_is_empty: 2/2
     03 - test_front_element: 3/3
@@ -16,6 +16,6 @@ Auto Graded Tests (100 points)
     14 - test_shrink: 5/5
     15 - test_grow_additional: 5/5
     16 - test_shrink_additional: 5/5
-    17 - test_max_wind_speeds: __/15
-    18 - test_max_wind_variability_score: __/15
+    17 - test_max_wind_speeds: 15/15
+    18 - test_max_wind_variability_score: 15/15
 
