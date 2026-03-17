@@ -1,0 +1,13 @@
+Total points 100/100
+- `test_single_node` – 8/8 points  
+- `test_single_node_zero` – 8/8 points  
+- `test_add_only` – 8/8 points  
+- `test_sub_only` – 8/8 points  
+- `test_mul_only` – 8/8 points  
+- `test_div_only_truncate` – 8/8 points  
+- `test_div_exact` – 8/8 points  
+- `test_nested_add_mul` – 10/10 points  
+- `test_nested_deep` – 8/8 points  
+- `test_subtraction_negative_result` – 8/8 points  
+- `test_division_negative_truncate_toward_zero` – 10/10 points  
+- `test_large_leaf` – 8/8 points  

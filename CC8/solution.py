@@ -26,5 +26,24 @@ def compute_formula_tree(tree):
     TODO
     ----
     Implement this function.
+    
     """
-    raise NotImplementedError
+
+    if tree.left is None and tree.right is None:
+       return tree.value 
+
+    left = compute_formula_tree(tree.left)
+    right = compute_formula_tree(tree.right)
+
+    symbol = tree.value
+    
+
+    if symbol == -1:      # add
+        return left + right
+    elif symbol == -2:    # subtract
+        return left - right
+    elif symbol == -3:    # divide (truncate toward zero)
+        return int(left / right)
+    elif symbol == -4:    # multiply
+        return left * right
+
