@@ -24,7 +24,8 @@ class DisjointSet:
         Args:
         value (int): The value to add to the disjoint set.
         """
-        pass
+        self.parents[value] = value
+        self.ranks[value] = 0
 
     def find_representative(self, value):
         """
@@ -37,7 +38,11 @@ class DisjointSet:
         Returns:
         int or None: The representative of the set, or None if the value is not found.
         """
-        pass
+        if value not in self.parents:
+            return None
+        if self.parents[value] != value:
+            self.parents[value] = self.find_representative(self.parents[value])
+        return self.parents[value]
 
     def merge_sets(self, value_one, value_two):
         """
@@ -48,4 +53,16 @@ class DisjointSet:
         value_one (int): The first value.
         value_two (int): The second value.
         """
-        pass
+        r1 = self.find_representative(value_one)
+        r2 = self.find_representative(value_two)
+
+        if r1 is None or r2 is None or r1 == r2:
+            return
+
+        if self.ranks[r1] < self.ranks[r2]:
+            self.parents[r1] = r2
+        elif self.ranks[r1] > self.ranks[r2]:
+            self.parents[r2] = r2
+        else:
+            self.parents[r2] = r1
+            self.ranks[r1] +=1

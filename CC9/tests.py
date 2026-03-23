@@ -1,4 +1,4 @@
-from solution import DisjointSet
+from .solution import DisjointSet
 
 #from solution1 import DisjointSet
 #from solution2 import DisjointSet
