@@ -352,7 +352,21 @@ class AVLTree:
         :param root: root node of subtree
         :param val: value to be searched for
         """
-        pass
+        if root is None:
+            return None
+
+        if val == root.value:
+            return root
+
+        elif val < root.value:
+            if root.left is None:
+                return root
+            return self.search(root.left, val)
+
+        else:
+            if root.right is None:
+                return root
+            return self.search(root.right, val)
 
 
     def inorder(self, root: Node) -> Generator[Node, None, None]:
@@ -362,7 +376,11 @@ class AVLTree:
         :param root: root node of subtree
         :return: generator of nodes in in-order traversal
         """
-        pass
+        if root is None:
+            return
+        yield from self.inorder(root.left)
+        yield(root)
+        yield from self.inorder(root.right)
 
     def __iter__(self) -> Generator[Node, None, None]:
         """
