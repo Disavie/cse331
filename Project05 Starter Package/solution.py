@@ -397,7 +397,13 @@ class AVLTree:
         :param root: root node of subtree
         :return: generator of nodes in pre-order traversal
         """
-        pass
+        if root is None:
+            return
+
+
+        yield(root)
+        yield from self.preorder(root.left)
+        yield from self.preorder(root.right)
 
     def postorder(self, root: Node) -> Generator[Node, None, None]:
         """
@@ -406,7 +412,11 @@ class AVLTree:
         :param root: root node of subtree
         :return: generator of nodes in post-order traversal
         """
-        pass
+        if root is None:
+            return
+        yield from self.postorder(root.left)
+        yield from self.postorder(root.right)
+        yield(root)
 
 
     def levelorder(self, root: Node) -> Generator[Node, None, None]:
@@ -416,8 +426,17 @@ class AVLTree:
         :param root: root node of subtree
         :return: generator of nodes in level-order traversal
         """
-        pass
+        if root is None:
+            return
+        q = deque([root])
+        while q:
+            node = q.popleft()
+            yield node
 
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
     
 # Classifier
 class KNNClassifier:
