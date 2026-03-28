@@ -106,7 +106,9 @@ class AVLTree:
         :param root: root node of subtree
         :return: height of subtree
         """
-        pass
+        if root is None:
+            return -1
+        return root.height
 
     def left_rotate(self, root: Node) -> Optional[Node]:
         """
@@ -115,25 +117,89 @@ class AVLTree:
         :param root: root node of unbalanced subtree to be rotated.
         :return: new root node of subtree following rotation.
         """
-        pass
+        if root is None:
+            return None
+    
+        if root.right is None:
+            return root
+
+        y = root.right
+        T3 = y.left
+
+        y.left = root
+        root.right = T3
+
+        if T3 is not None:
+            T3.parent = root
+
+        y.parent = root.parent
+        if y.parent is None:
+            self.origin = y
+        else:
+            if root.parent.left == root:
+                root.parent.left = y
+            else:
+                y.parent.right = y
+
+        root.parent = y
+
+
+        root.height = 1 + max(self.height(root.right),self.height(root.left))
+        y.height = 1 + max(self.height(y.right),self.height(y.left))
+        return y
 
     def right_rotate(self, root: Node) -> Optional[Node]:
+
         """
         Perform a right rotation on the subtree rooted at `root`. Return new subtree root.
 
         :param root: root node of unbalanced subtree to be rotated.
         :return: new root node of subtree
         """
-        pass
+        if root is None:
+            return None
+    
+        if root.left is None:
+            return root
+
+        y = root.left
+        T3 = y.right
+
+        y.right = root
+        root.left = T3
+
+        if T3 is not None:
+            T3.parent = root
+
+        y.parent = root.parent
+        if y.parent is None:
+            self.origin = y
+        else:
+            if root.parent.left == root:
+                root.parent.left = y
+            else:
+                y.parent.right = y
+        root.parent = y
+
+        root.height = 1 + max(self.height(root.left),self.height(root.right))
+        y.height = 1 + max(self.height(y.left),self.height(y.right))
+
+        return y
+
+        
 
     def balance_factor(self, root: Node) -> int:
+
         """
         Compute the balance factor of the subtree rooted at `root`.
 
         :param root: root node of subtree
         :return: balance factor of subtree
         """
-        pass
+        if root is None:
+            return 0
+        return self.height(root.left)-self.height(root.right)
+
 
     def rebalance(self, root: Node) -> Optional[Node]:
         """
@@ -142,7 +208,24 @@ class AVLTree:
         :param root: root node of subtree to be rebalanced
         :return: new root node of subtree
         """
-        pass
+
+        b = self.balance_factor(root)
+
+
+        if b > 1: # left heavy
+            if self.balance_factor(root.left) < 0:
+                root.left = self.left_rotate(root.left)
+
+            return self.right_rotate(root)
+
+            #
+        elif b < -1: # right heavy
+            if self.balance_factor(root.right) > 0:
+                root.right = self.right_rotate(root.right)
+
+            return self.left_rotate(root)
+
+        return root
 
     def insert(self, root: Node, val: T, data: str = None) -> Optional[Node]:
         """
@@ -153,7 +236,32 @@ class AVLTree:
         :param data: Optional parameter to store data in Node, used in the application problem.
         :return: new root node of subtree
         """
-        pass
+
+        if root is None:
+            node = Node(val,root,data)
+            self.size+=1
+            if self.origin is None:
+                self.origin = node
+            return node
+
+        if val < root.value:
+            root.left = self.insert(root.left, val, data)
+            root.left.parent = root
+        elif val > root.value:
+            root.right = self.insert(root.right,val,data)
+            root.right.parent = root
+        else:
+            return root
+
+        root.height = 1 + max(self.height(root.left), self.height((root.right)))
+        new_root = self.rebalance(root)
+
+        if new_root.parent is None:
+            self.origin = new_root
+
+        return new_root
+
+
 
     def remove(self, root: Node, val: T) -> Node:
         """
@@ -163,7 +271,52 @@ class AVLTree:
         :param val: the value to remove
         :return: the new root of the subtree
         """
-        pass
+        if root is None:
+            return None
+
+        if val < root.value:
+            root.left = self.remove(root.left,val)
+            if root.left:
+                root.left.parent = root
+        elif val > root.value:
+            root.right = self.remove(root.right,val)
+            if root.right:
+                root.right.parent = root
+        else:
+            if root.left is None and root.right is None:
+                self.size-=1
+                if root == self.origin:
+                    self.origin = None
+                return None
+
+            elif root.left is None:
+                temp = root.right
+                if temp:
+                    temp.parent = root.parent
+                self.size-=1
+                return temp
+
+            elif root.right is None:
+                temp = root.left
+                if temp:
+                    temp.parent = root.parent
+                self.size-=1
+                return temp
+
+            before = self.max(root.left)
+            root.value = before.value
+            root.data = before.data
+            root.left = self.remove(root.left,before.value)
+            if root.left:
+                root.left.parent = root
+        root.height = 1 + max(self.height(root.left), self.height(root.right))
+
+        n = self.rebalance(root)
+
+        if n.parent is None:
+            self.origin = n
+
+        return n
 
     def min(self, root: Node) -> Optional[Node]:
         """
@@ -172,7 +325,11 @@ class AVLTree:
         :param root: root node of subtree
         :return: node with minimum value in subtree
         """
-        pass
+        if root is None:
+            return None
+        while root.left is not None:
+            root = root.left
+        return root
 
     def max(self, root: Node) -> Optional[Node]:
         """
@@ -181,7 +338,11 @@ class AVLTree:
         :param root: root node of subtree
         :return: node with maximum value in subtree
         """
-        pass
+        if root is None:
+            return None
+        while root.right is not None:
+            root = root.right
+        return root
 
     def search(self, root: Node, val: T) -> Optional[Node]:
         """
