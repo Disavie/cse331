@@ -238,7 +238,7 @@ class AVLTree:
         """
 
         if root is None:
-            node = Node(val,root,data)
+            node = Node(val,data=data)
             self.size+=1
             if self.origin is None:
                 self.origin = node
@@ -490,9 +490,12 @@ class KNNClassifier:
         :param data: List of tuples: (value, classification)
         :return: None
         """
-        pass
+        for e1, e2 in data:
+            self.tree.origin = self.tree.insert(self.tree.origin,e1,e2)
+
 
     def get_k_neighbors(self, target_value: float) -> List[Tuple[float, str]]:
+
         """
         Finds the k closest neighbors to the target_value using in-order traversal
         of the AVL tree and a sliding window approach.
@@ -501,6 +504,8 @@ class KNNClassifier:
         :return: A list of (value, label) tuples representing the k closest neighbors
         """
         pass
+
+
 
     def calculate_best_fit(self, neighbors: List[Tuple[float, str]], target_value: float) -> str:
         """
