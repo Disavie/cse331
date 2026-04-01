@@ -1,5 +1,5 @@
 
-Total points for Project05: 75
+Total points for Project05: 100
 
 Detailed points for each test case:
   1)  test_rotate: 10
@@ -18,6 +18,6 @@ Detailed points for each test case:
   14) test_avl_comprehensive: 5
 
   15) test_train: 5
-  16) test_get_k_neighbors: //10
-  17) test_calculate_best_fit: //5
-  18) test_knn: //10
+  16) test_get_k_neighbors: 10
+  17) test_calculate_best_fit: 5
+  18) test_knn: 10

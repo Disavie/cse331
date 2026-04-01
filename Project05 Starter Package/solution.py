@@ -493,48 +493,59 @@ class KNNClassifier:
         if len(data) > 0:
             for e1, e2 in data:
                 self.tree.origin = self.tree.insert(self.tree.origin,e1,e2)
-
-
-    def get_k_neighbors(self, target_value: float) -> List[Tuple[float, str]]:
-
-        """
-        Finds the k closest neighbors to the target_value using in-order traversal
-        of the AVL tree and a sliding window approach.
-
-        :param target_value: The value to find neighbors for
-        :return: A list of (value, label) tuples representing the k closest neighbors
-        """
-        # root of our tree
-        if self.tree.origin is None or self.tree.origin.value is None:
+    def get_k_neighbors(self, value: float) -> List[Tuple[float, str]]:
+        if self.tree.origin is None or self.k <= 0:
             return []
 
-        root = self.tree.origin
-        k = self.k
+        nodes = []
 
-        generator = root.inorder(avl.origin)
-        self.assertIsInstance(generator, types.GeneratorType)
-        expected = list(range(10))
-        for num in expected:
-            node = next(generator)
-            nodes.append(node)
+        for node in self.tree.inorder(self.tree.origin):
+            diff = abs(node.value - value)
+            nodes.append((diff, node.value, node.data))
 
-        with self.assertRaises(StopIteration):
-            next(generator)
-        print(nodes)
+        diff_counts = []
+        for diff, _, _ in nodes:
+            found = False
+            for i, (existing_diff, count) in enumerate(diff_counts):
+                if self.floats_equal(diff, existing_diff):
+                    diff_counts[i] = (existing_diff, count + 1)
+                    found = True
+                    break
+            if not found:
+                diff_counts.append((diff, 1))
+
+        def is_unique(diff):
+            for d, count in diff_counts:
+                if self.floats_equal(diff, d):
+                    return count == 1
+            return False
+
+        valid_nodes = [n for n in nodes if is_unique(n[0])]
+        valid_nodes.sort(key=lambda x: x[0])
+
+        result = [(val, label) for _, val, label in valid_nodes[:self.k]]
+
+        return result
+    def calculate_best_fit(self, neighbors: List[Tuple[float, str]], value: float) -> str:
+        if not neighbors:
+            return None
+        weights = {}
 
 
+        for node_value, label in neighbors:
+            diff = abs(value - node_value)
 
-    def calculate_best_fit(self, neighbors: List[Tuple[float, str]], target_value: float) -> str:
-        """
-        Calculates the predicted classification label using inverse distance weighting.
-        Each neighbor contributes a weight of 1 / distance to its label.
-        The label with the highest total weight is selected.
+            if self.floats_equal(diff, 0.0):
+                return label   
 
-        :param neighbors: List of (value, label) tuples representing k nearest neighbors
-        :param target_value: The value to be classified
-        :return: The predicted label
-        """
-        pass
+            weight = 1 / diff
+
+            if label not in weights:
+                weights[label] = 0.0
+            weights[label] += weight
+
+        return max(weights.items(), key=lambda x: x[1])[0]
+
 
     def classify(self, value: float) -> str:
         """
@@ -542,8 +553,8 @@ class KNNClassifier:
 
         :param value: value to be classified.
         """
-        pass
-
+        neighbors = self.get_k_neighbors(value)
+        return self.calculate_best_fit(neighbors, value)
 
 ########################################################
 # DO NOT MODIFY BELOW #
