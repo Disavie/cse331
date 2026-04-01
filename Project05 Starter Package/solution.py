@@ -490,8 +490,9 @@ class KNNClassifier:
         :param data: List of tuples: (value, classification)
         :return: None
         """
-        for e1, e2 in data:
-            self.tree.origin = self.tree.insert(self.tree.origin,e1,e2)
+        if len(data) > 0:
+            for e1, e2 in data:
+                self.tree.origin = self.tree.insert(self.tree.origin,e1,e2)
 
 
     def get_k_neighbors(self, target_value: float) -> List[Tuple[float, str]]:
@@ -503,7 +504,23 @@ class KNNClassifier:
         :param target_value: The value to find neighbors for
         :return: A list of (value, label) tuples representing the k closest neighbors
         """
-        pass
+        # root of our tree
+        if self.tree.origin is None or self.tree.origin.value is None:
+            return []
+
+        root = self.tree.origin
+        k = self.k
+
+        generator = root.inorder(avl.origin)
+        self.assertIsInstance(generator, types.GeneratorType)
+        expected = list(range(10))
+        for num in expected:
+            node = next(generator)
+            nodes.append(node)
+
+        with self.assertRaises(StopIteration):
+            next(generator)
+        print(nodes)
 
 
 
