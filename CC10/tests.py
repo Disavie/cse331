@@ -3,6 +3,15 @@ import unittest
 
 
 class TestProgram(unittest.TestCase):
+
+
+
+
+    def test_insert(self):
+        t  = solution.Trie()
+        t.insert("Test")
+
+
     def test_case_1(self):
         self.assertEqual(
             solution.multi_string_search(

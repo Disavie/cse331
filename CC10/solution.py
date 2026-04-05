@@ -18,9 +18,14 @@ class Trie:
         Args:
             word (str): The word to insert.
         """
-        # TODO: Implement this method
-        pass
+        curr = self.root
+        for ch in word:
+            if ch not in curr:
+                curr [ch] = {}
+            curr = curr[ch]
 
+        curr[self.end_symbol] = word
+        return
 
 def multi_string_search(big_string, small_strings):
     """
@@ -35,7 +40,32 @@ def multi_string_search(big_string, small_strings):
                     is found in the big string.
     """
     # TODO: Build the trie and search for the small strings
-    pass
+    t = Trie()
+    for word in small_strings:
+        t.insert(word)
+
+    # edge
+    found = {word: False for word in small_strings}
+    if "" in found:
+        found[""] = True
+
+    for i in range(len(big_string)):
+        curr = t.root
+        j = i
+
+        while j < len(big_string):
+            ch = big_string[j]
+            if ch not in curr:
+                break
+            curr = curr[ch]
+
+            if t.end_symbol in curr:
+                found_word = curr[t.end_symbol]
+                found[found_word] = True
+            j+=1
+
+    return [found[word] for word in small_strings]
+    return isin
 
 
 def search_from_index(string, start_index, trie, found_strings):
