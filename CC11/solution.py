@@ -22,7 +22,20 @@ def number_of_ways_to_get_to_end(width, height):
     """
     # TODO: Initialize a 2D grid or use a mathematical formula
     # You may implement a dynamic programming table or use permutations
-    pass
+    #
+    grid = [[0] * width for _ in range(height)]
+
+
+    grid[0][0] = 1
+    for i in range(height):
+        for j in range(width):
+            if i > 0: 
+                grid[i][j] += grid[i - 1][j]
+            if j > 0:  
+                grid[i][j] += grid[i][j - 1]
+
+    return grid[height - 1][width - 1]
+
 
 
 # Optional challenge: implement using combinatorics
@@ -44,9 +57,24 @@ def number_of_ways_to_get_to_end_permutation(width, height):
     - int: number of unique paths calculated via permutations
     """
     # TODO: Implement the formula using factorial
-    pass
+
+    def factorial(num):
+        if num == 1:
+            return 1
+
+        return num * factorial(num-1)
+
+    R = width - 1
+    D = height -1
+    num = factorial(R+D)
+    denom = factorial(R) * factorial(D)
+
+    return num/denom
 
 
+
+
+# oops i didnt notice there was a factorial function given to me until i wrote my own 
 def factorial(num):
     """
     Compute the factorial of a non-negative integer.
